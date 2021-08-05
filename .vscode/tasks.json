@@ -23,7 +23,12 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            //This "group" section will help to build our project easily.
+            "group": {
+                "kind": "build"
+                "isDefault": true
+            }
         },
         {
             "label": "watch",
