@@ -7,6 +7,7 @@ namespace catalog.Repositories//Using namespace from folder's name
     public interface IItemsRepository//This Interface extracted from InMemItemsRepository then copy pasted to this file.
     {
         IEnumerable<Item> GetItems();
-        Item GetItems(Guid id);
+        Item GetItem(Guid id);
+        void CreateItem(Item item);
     }
 }

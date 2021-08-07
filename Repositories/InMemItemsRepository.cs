@@ -15,11 +15,16 @@ namespace catalog.Repositories
             new Item { Id = Guid.NewGuid(), Name = "Twin Dagger", Price = 40, CreatedDate = DateTimeOffset.UtcNow },
         };
 
+        public void CreateItem(Item item)  //This will add item to list "items".
+        {
+            items.Add(item);
+        }
+
         public IEnumerable<Item> GetItems() //This will return all items in list "items".
         {
             return items;
         }
-        public Item GetItems(Guid id) //This will return one item based of "id".
+        public Item GetItem(Guid id) //This will return one item based of "id".
         {
             return items.Where(item => item.Id == id).SingleOrDefault();
         }

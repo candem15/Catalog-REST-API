@@ -24,15 +24,28 @@ namespace catalog.Controllers
             return items;
         }
         [HttpGet("{id}")]// GET /items/{id}
-        public ActionResult<ItemDto> GetItems(Guid id) //This will return one item in list "items". 
+        public ActionResult<ItemDto> GetItem(Guid id) //This will return one item in list "items". 
         {
-            var item=repository.GetItems(id);//Invokes GetItems method from Repositories folder for get one item and equalize it to variable then return. 
+            var item=repository.GetItem(id);//Invokes GetItems method from Repositories folder for get one item and equalize it to variable then return. 
             if(item==null)
             {
                return NotFound();//ActionResult type allowes us both return list item or NotFound function.
             }
 
             return item.AsDto(); //Setting up "Contract" as ItemDto here, because we started using Dtos.
+        }
+        [HttpPost] // POST/items
+        public ActionResult<ItemDto> CreateItem(CreateItemDto itemDto) // With ActionResult we are able to return multiple type.
+        {
+            Item item=new()
+            {
+                Id=Guid.NewGuid(),
+                Name=itemDto.Name,
+                Price=itemDto.Price,
+                CreatedDate=DateTimeOffset.UtcNow
+            };
+            repository.CreateItem(item);
+            return CreatedAtAction(nameof(GetItem),new{id=item.Id},item.AsDto());//This return a "itemDto" and also return heeader that specifies where you can go ahead and get information about created item.
         }
     }
 }
