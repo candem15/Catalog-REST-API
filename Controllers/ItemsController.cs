@@ -10,10 +10,10 @@ namespace catalog.Controllers
     [Route("items")]
     public class ItemsController:ControllerBase //ControllerBase must be inherited for making from class to controller.
     {
-        private readonly InMemItemsRepository repository; //In controller we need add "instance" of repository that we created for any action or operation.
-        public ItemsController()//Constructor of this controller.
+        private readonly IItemsRepository repository; //In controller we need add "instance" of repository that we created for any action or operation.
+        public ItemsController(IItemsRepository repository)//Constructor of this controller. While we are using interface in controller constructor this provides "Dependency Injection".
         {
-            repository=new InMemItemsRepository();//This is work like "repository writer".
+            this.repository=repository;//This is work like "repository writer". Thanks to "IItemsRepository" now controller dont know which repository work with it.
         }
         [HttpGet]// GET /items 
         public IEnumerable<Item> GetItems() //This will return all items in list "items".

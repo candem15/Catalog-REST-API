@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using catalog.Repositories;
 
 namespace catalog
 {
@@ -26,6 +27,7 @@ namespace catalog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IItemsRepository,InMemItemsRepository>(); //If we need one instance entire lifetime and use it over and over again whenever it is needed, we are register service(dependency) as "Singleton" type to do that.
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
