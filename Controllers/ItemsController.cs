@@ -17,12 +17,14 @@ namespace catalog.Controllers
         {
             this.repository=repository;//This is work like "repository writer". Thanks to "IItemsRepository" now controller dont know which repository work with it.
         }
+        
         [HttpGet]// GET /items 
         public IEnumerable<ItemDto> GetItems() //This will return all items in list "items".
         {
             var items=repository.GetItems().Select(item=>item.AsDto());//Invokes GetItems method from Repositories folder for get all items and equalize it to variable then return. Setting up "Contract" as ItemDto here, because we started using Dtos.
             return items;
         }
+
         [HttpGet("{id}")]// GET /items/{id}
         public ActionResult<ItemDto> GetItem(Guid id) //This will return one item in list "items". 
         {
@@ -34,7 +36,8 @@ namespace catalog.Controllers
 
             return item.AsDto(); //Setting up "Contract" as ItemDto here, because we started using Dtos.
         }
-        [HttpPost] // POST/items
+
+        [HttpPost] // POST /items
         public ActionResult<ItemDto> CreateItem(CreateItemDto itemDto) // With ActionResult we are able to return multiple type.
         {
             Item item=new()
@@ -44,8 +47,30 @@ namespace catalog.Controllers
                 Price=itemDto.Price,
                 CreatedDate=DateTimeOffset.UtcNow
             };
+
             repository.CreateItem(item);
+            
             return CreatedAtAction(nameof(GetItem),new{id=item.Id},item.AsDto());//This return a "itemDto" and also return heeader that specifies where you can go ahead and get information about created item.
+        }
+        [HttpPut("{id}")] // PUT /items/{id}
+        public ActionResult UpdateItem(Guid id, UpdateItemDto itemDto)
+        {
+            var existingItem=repository.GetItem(id);
+
+            if(existingItem==null)
+            {
+                return NotFound();
+            }
+
+            Item updatedItem=existingItem with //"With-expressions" is comes with record(like class) type and this helps us get copy of existing item and update it.
+            {
+                Name=itemDto.Name,
+                Price=itemDto.Price
+            };
+
+            repository.UpdateItem(updatedItem);
+
+            return NoContent(); //The convention is return no content in "UpdateItem".
         }
     }
 }

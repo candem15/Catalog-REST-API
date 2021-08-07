@@ -28,6 +28,12 @@ namespace catalog.Repositories
         {
             return items.Where(item => item.Id == id).SingleOrDefault();
         }
+
+        public void UpdateItem(Item item) //Updating an item based from data that client send.
+        {
+            var index=items.FindIndex(existingItem=>existingItem.Id==item.Id); //Find existed item's index and match with both's id.
+            items[index]=item; //Match an existing item to that updated by client.
+        }
     }
 
 }
