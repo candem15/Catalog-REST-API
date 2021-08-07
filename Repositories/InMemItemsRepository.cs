@@ -28,11 +28,16 @@ namespace catalog.Repositories
         {
             return items.Where(item => item.Id == id).SingleOrDefault();
         }
-
         public void UpdateItem(Item item) //Updating an item based from data that client send.
         {
             var index=items.FindIndex(existingItem=>existingItem.Id==item.Id); //Find existed item's index and match with both's id.
             items[index]=item; //Match an existing item to that updated by client.
+        }
+
+        public void DeleteItem(Guid id) //Need only id prop of item to delete because its unique.
+        {
+           var index=items.FindIndex(existingItem=>existingItem.Id==id); //Find existed item's index and match with both's id.
+           items.RemoveAt(index); //Remove item from list of items based of index.
         }
     }
 

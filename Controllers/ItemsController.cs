@@ -72,5 +72,20 @@ namespace catalog.Controllers
 
             return NoContent(); //The convention is return no content in "UpdateItem".
         }
+
+        [HttpDelete("{id}")] // DELETE /items/{id}
+        public ActionResult DeleteItem(Guid id)
+        {
+            var existingItem=repository.GetItem(id); // Find existing item from repository.
+
+            if(existingItem==null)
+            {
+                return NotFound();
+            }
+
+            repository.DeleteItem(id); //Only need to know item's id to delete it from repository. 
+
+            return NoContent();
+        }
     }
 }
