@@ -14,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using catalog.Repositories;
 using MongoDB.Driver;
 using catalog.Settings;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson;
 
 namespace catalog
 {
@@ -29,13 +32,16 @@ namespace catalog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String)); //Guid type representation with not familiar form in MongoDb so we use "serializer" to cover that.
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String)); //DateTimeOffset type representation with not familiar form in MongoDb so we use "serializer" to cover that.
+
             services.AddSingleton<IMongoClient>(ServiceProvider=> //After setting ConnectionString MongoDb we need to register IMongoClient that we injected into MongoDBItemsRepository. Injecting dependency besides like InMemItemsRepository we have to construct explicitly because of additional configuration needed.
             {
                 var settings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>(); //For settings of client recieved from "Settings/MongoDbSettings.cs" and use "Configuration" of "Startup" that haven't populated yet.
                 return new MongoClient(settings.ConnectionString); //IMongoClient instance construct.
             });
            
-            services.AddSingleton<IItemsRepository,InMemItemsRepository>(); //If we need one instance entire lifetime and use it over and over again whenever it is needed, we are register service(dependency) as "Singleton" type to do that.
+            services.AddSingleton<IItemsRepository,MongoDbItemsRepository>(); //If we need one instance entire lifetime and use it over and over again whenever it is needed, we are register service(dependency) as "Singleton" type to do that.
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
