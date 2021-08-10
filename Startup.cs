@@ -43,7 +43,10 @@ namespace catalog
            
             services.AddSingleton<IItemsRepository,MongoDbItemsRepository>(); //If we need one instance entire lifetime and use it over and over again whenever it is needed, we are register service(dependency) as "Singleton" type to do that.
 
-            services.AddControllers();
+            services.AddControllers(Options=>
+            {
+                Options.SuppressAsyncSuffixInActionNames = false; //This option prevents to .NetCore removes async suffix from methods in runtime. If this is not setted we cant POST(create) item because at CreateItemAsync method in ItemsController "nameof" option cant find "GetItemAsync" because of that is turned in runtime to "GetItem".
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "catalog", Version = "v1" });

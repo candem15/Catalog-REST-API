@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using catalog.Dtos;
 using catalog.Entities;
 using catalog.Repositories;
@@ -19,16 +20,16 @@ namespace catalog.Controllers
         }
         
         [HttpGet]// GET /items 
-        public IEnumerable<ItemDto> GetItems() //This will return all items in list "items".
+        public async Task<IEnumerable<ItemDto>> GetItemsAsync() //This will return all items in list "items".
         {
-            var items=repository.GetItems().Select(item=>item.AsDto());//Invokes GetItems method from Repositories folder for get all items and equalize it to variable then return. Setting up "Contract" as ItemDto here, because we started using Dtos.
+            var items= (await repository.GetItemsAsync()).Select(item=>item.AsDto());//Invokes GetItems method from Repositories folder for get all items and equalize it to variable then return. Setting up "Contract" as ItemDto here, because we started using Dtos. "Await" is seperated from actual method and we cant use "Select" but for avoid this wrap await and async method then use "Select".
             return items;
         }
 
         [HttpGet("{id}")]// GET /items/{id}
-        public ActionResult<ItemDto> GetItem(Guid id) //This will return one item in list "items". 
+        public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id) //This will return one item in list "items". 
         {
-            var item=repository.GetItem(id);//Invokes GetItems method from Repositories folder for get one item and equalize it to variable then return. 
+            var item = await repository.GetItemAsync(id);//Invokes GetItems method from Repositories folder for get one item and equalize it to variable then return. 
             if(item==null)
             {
                return NotFound();//ActionResult type allowes us both return list item or NotFound function.
@@ -38,7 +39,7 @@ namespace catalog.Controllers
         }
 
         [HttpPost] // POST /items
-        public ActionResult<ItemDto> CreateItem(CreateItemDto itemDto) // With ActionResult we are able to return multiple type.
+        public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto itemDto) // With ActionResult we are able to return multiple type.
         {
             Item item=new()
             {
@@ -48,14 +49,14 @@ namespace catalog.Controllers
                 CreatedDate=DateTimeOffset.UtcNow
             };
 
-            repository.CreateItem(item);
+            await repository.CreateItemAsync(item);
             
-            return CreatedAtAction(nameof(GetItem),new{id=item.Id},item.AsDto());//This return a "itemDto" and also return heeader that specifies where you can go ahead and get information about created item.
+            return CreatedAtAction(nameof(GetItemsAsync),new{id=item.Id},item.AsDto());//This return a "itemDto" and also return heeader that specifies where you can go ahead and get information about created item.
         }
         [HttpPut("{id}")] // PUT /items/{id}
-        public ActionResult UpdateItem(Guid id, UpdateItemDto itemDto)
+        public async Task<ActionResult> UpdateItemAsync(Guid id, UpdateItemDto itemDto)
         {
-            var existingItem=repository.GetItem(id);
+            var existingItem = await repository.GetItemAsync(id);
 
             if(existingItem==null)
             {
@@ -68,22 +69,22 @@ namespace catalog.Controllers
                 Price=itemDto.Price
             };
 
-            repository.UpdateItem(updatedItem);
+            await repository.UpdateItemAsync(updatedItem);
 
             return NoContent(); //The convention is return no content in "UpdateItem".
         }
 
         [HttpDelete("{id}")] // DELETE /items/{id}
-        public ActionResult DeleteItem(Guid id)
+        public async Task<ActionResult> DeleteItem(Guid id)
         {
-            var existingItem=repository.GetItem(id); // Find existing item from repository.
+            var existingItem = await repository.GetItemAsync(id); // Find existing item from repository.
 
             if(existingItem==null)
             {
                 return NotFound();
             }
 
-            repository.DeleteItem(id); //Only need to know item's id to delete it from repository. 
+            await repository.DeleteItemAsync(id); //Only need to know item's id to delete it from repository. 
 
             return NoContent();
         }

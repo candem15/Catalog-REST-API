@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using catalog.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -18,32 +19,32 @@ namespace catalog.Repositories
             IMongoDatabase database = mongoClient.GetDatabase(databaseName); //Create instance, reference to database.
             itemsCollection = database.GetCollection<Item>(collectionName); //Create instance, reference to collection.
         }
-        public void CreateItem(Item item)//There is a several way to get MongoDB database in out box. First we can install database via MongoDB installer or run database as a Docker container.
+        public async Task CreateItemAsync(Item item)//There is a several way to get MongoDB database in out box. First we can install database via MongoDB installer or run database as a Docker container.
         {
-            itemsCollection.InsertOne(item);
+           await itemsCollection.InsertOneAsync(item); //Now InsertOne method turned to async type so it's way more efficent and application won't wait this method for finishing its job to continue. Then make all methods "Task" with async and await.
         }
         //Add extension "MongoDb for vsCode". Then before setting our routes we checked MongoDb for if anythings wrong with Postman POST route.
-        public void DeleteItem(Guid id) //Similar to GetItem(id) but now instead Delete item.
+        public async Task DeleteItemAsync(Guid id) //Similar to GetItem(id) but now instead Delete item.
         {
            var filter=filterBuilder.Eq(item=>item.Id, id);
-           itemsCollection.DeleteOne(filter);
+           await itemsCollection.DeleteOneAsync(filter);
         }
 
-        public Item GetItem(Guid id)
+        public async Task<Item> GetItemAsync(Guid id)
         {
             var filter=filterBuilder.Eq(item=>item.Id, id); //This uses filterBuilder that we declared to filter id from items list.
-            return itemsCollection.Find(filter).SingleOrDefault();
+            return await itemsCollection.Find(filter).SingleOrDefaultAsync();
         }
 
-        public IEnumerable<Item> GetItems()
+        public async Task<IEnumerable<Item>> GetItemsAsync()
         {
-            return itemsCollection.Find(new BsonDocument()).ToList(); //This will give us list of items in the collection.
+            return await itemsCollection.Find(new BsonDocument()).ToListAsync(); //This will give us list of items in the collection.
         }
-
-        public void UpdateItem(Item item) //Similar to GetItem(id)
+        //After changed all methods to async Task model then move to IItemsController.cs
+        public async Task UpdateItemAsync(Item item) //Similar to GetItem(id)
         {
             var filter=filterBuilder.Eq(existingItem=>existingItem.Id, item.Id); 
-            itemsCollection.ReplaceOne(filter,item);
+            await itemsCollection.ReplaceOneAsync(filter,item);
         }
     }
 }
