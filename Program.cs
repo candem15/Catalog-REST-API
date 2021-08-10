@@ -17,7 +17,7 @@ namespace catalog
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            Host.CreateDefaultBuilder(args) //After we added ".NET secret manager" this builder take care of injecting secret manager as one more configuration to our service.
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
