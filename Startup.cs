@@ -73,8 +73,11 @@ namespace catalog
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "catalog v1"));
             }
 
-            app.UseHttpsRedirection();
-
+            if(env.IsDevelopment()) //This is for Docker containerize. Because we dont want redirection at docker container so it is allowed only in development enviroment.
+            {
+                app.UseHttpsRedirection();
+            }
+            
             app.UseRouting();
 
             app.UseAuthorization();
@@ -110,3 +113,6 @@ namespace catalog
         }
     }
 }
+//Building docker image => "docker build -t catalog:v1 ." -t is tag for image and building directory is "." means current directory.
+//We are also using MongoDbContainer besides REST api container. And both of them needs communicate with each other. For doing that, we create what is called "docker network" and simply type "docker network create erayNet5" in terminal(last word in commandline can be change).
+//For share our Docker images at "Docker Hub" first we have to login "docker login" then in our case "docker tag catalog:v1 candem16/catalog:v1" and "docker push candem16/catalog:v1".
