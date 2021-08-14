@@ -1,0 +1,54 @@
+apiVersion: apps/v1 #First we created new folder that name called kubernetes for collecting all deployment files together. 
+kind: Deployment    #We need to deploy our catalog REST api to Kubernetes. For speeding up process we take advantages of extension so type "deploy" in empty .yaml file and click intellisense that will show up. This will create basic shape of deployment resource.
+metadata:
+  name: catalog-deployment
+spec:
+  selector: #This is for what we use to specify how deployment going to select which pods is going to manage.
+    matchLabels:
+      app: catalog
+  template:
+    metadata:
+      labels:
+        app: catalog #Assign a 'catalog' label to all pods.
+    spec:
+      containers:
+      - name: catalog
+        image: candem16/catalog:v1 #This is name of image that we created at docker in last commit. Now we are saying we are pulling down this image into kubernetes
+        resources: #Hardware specs settings that for our REST api can be needed. In this case default values should be enough.
+          limits:
+            memory: "128Mi"
+            cpu: "500m" #Equal to 0.5 CPU
+        ports:
+        - containerPort: 80 #Base ASP NET Core image overrides our port by using port 80 as in previous commit so we dont change that.
+        env: #In this deployment we need few enviroment variables. We have to specify both, our HOST for able to talk MongoDb container and USER, PASSWORD to connect database.
+          - name: MongoDbSettings__Host #In .yaml file for adressing JSON object's variables with double underscore(__) instead of semi colon(:).
+            value: mongodb-service
+          - name: MongoDbSettings__Password #If you remember we used secret manager to protect password. Also similar case in kubernetes => "kubectl create secret generic catalog-secrets --from-literal=mongodb-password='eray#Admin1'".
+            valueFrom: #Instead of giving value here, we are getting value from kubernetes secrets that we created.
+              secretKeyRef:
+                name: catalog-secrets
+                key: mongodb-password
+        livenessProbe: #Here we specify our Health probes. Health probes is a mechanism that enables monitor the health of our REST api by using health checks. If you remember we had both liveness and readiness probe.
+          httpGet:
+            path: /health/live #Is the REST API alive?
+            port: 80
+        readinessProbe:
+          httpGet:
+            path: /health/ready #Is the REST API ready to use?
+            port: 80    
+#This deployment is enough for pulling the containers, enviroment, variables and all that. But still, there is no way to reach for anybody reach into container from the outside. For enable to do that we need another component that name calls service.
+
+--- #This seperates deployment and service resources.
+apiVersion: v1 #We used intellisense again for basic shape of service. Type "service" and click intellisense that will show up.
+kind: Service
+metadata:
+  name: catalog-service
+spec:
+  type: LoadBalancer #This open a window to the outside, so that people can actually reach out our REST api from outside.
+  selector:
+    app: catalog #This targets all pods with "catalog" app value.
+  ports:
+  - port: 80
+    targetPort: 80
+#For applying this deployment to kubernetes go to folder => "cd kubernetes" then =>"kubectl apply -f .\catalog.yaml"
+#"kubectl get deployments", "kubectl get pods" for take a look.
