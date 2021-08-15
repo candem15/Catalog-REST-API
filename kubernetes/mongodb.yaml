@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet 
+metadata:
+  name: mongodb-statefulset
+spec:
+  serviceName: "mongodb-service" #Service name is used to give a some identity both to the stateful set and to the pods that are going to be a managed by it.
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 27017
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: "erayadmin"
+          - name: MONGO_INITDB_ROOT_PASSWORD #If you remember we used secret manager to protect password. Also similar case in kubernetes => "kubectl create secret generic catalog-secrets --from-literal=mongodb-password='eray#Admin1'".
+            valueFrom: #Instead of giving value here, we are getting value from kubernetes secrets that we created.
+              secretKeyRef:
+                name: catalog-secrets
+                key: mongodb-password
+        volumeMounts: #We have to tell to container there is volume claim exists and map that in host machine to space into the container.
+          - mountPath: /data/db
+            name: data           
+  volumeClaimTemplates: #If mongodb container is killed for any reason, tha data will just disappear. To prevent this, we create what we call a "persistent volume". To do that we're going to use "volume claim template".
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"] #Access mode declares, which way is the persistent volume going to be mounted into to node. "ReadWriteOnce"=>The volume can be mounted as read-write by a single node.
+        resources:
+          requests:
+            storage: 1Gi
+
+--- 
+#We need also service like as at catalog.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  clusterIP: None #ClusterIp can used for set an ip to our service and it gets local ip as default that can be used to talk to other services within the cluster. But in a stateful set, we want to address each of the pods individually.
+  selector: #Anytime a request comes into this service, it will find the pods that define in "app" label. 
+    app: mongodb
+  ports:
+  - port: 27017
+    targetPort: 27017 #Same as "container port".
+#For applying this statefulSet to kubernetes go to folder => "cd kubernetes" then =>"kubectl apply -f .\mongodb.yaml"
+#"kubectl get statefulsets", "kubectl get pods" for take a look.

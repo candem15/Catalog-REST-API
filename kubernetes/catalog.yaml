@@ -19,7 +19,7 @@ spec:
             memory: "128Mi"
             cpu: "500m" #Equal to 0.5 CPU
         ports:
-        - containerPort: 80 #Base ASP NET Core image overrides our port by using port 80 as in previous commit so we dont change that.
+          - containerPort: 80 #Base ASP NET Core image overrides our port by using port 80 as in previous commit so we dont change that.
         env: #In this deployment we need few enviroment variables. We have to specify both, our HOST for able to talk MongoDb container and USER, PASSWORD to connect database.
           - name: MongoDbSettings__Host #In .yaml file for adressing JSON object's variables with double underscore(__) instead of semi colon(:).
             value: mongodb-service
@@ -37,8 +37,8 @@ spec:
             path: /health/ready #Is the REST API ready to use?
             port: 80    
 #This deployment is enough for pulling the containers, enviroment, variables and all that. But still, there is no way to reach for anybody reach into container from the outside. For enable to do that we need another component that name calls service.
-
---- #This seperates deployment and service resources.
+--- 
+#This seperates deployment and service resources. Dont put comment line to where "---" is, that prevents to seperate service and deployment.
 apiVersion: v1 #We used intellisense again for basic shape of service. Type "service" and click intellisense that will show up.
 kind: Service
 metadata:
@@ -48,7 +48,7 @@ spec:
   selector:
     app: catalog #This targets all pods with "catalog" app value.
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 80
 #For applying this deployment to kubernetes go to folder => "cd kubernetes" then =>"kubectl apply -f .\catalog.yaml"
 #"kubectl get deployments", "kubectl get pods" for take a look.
