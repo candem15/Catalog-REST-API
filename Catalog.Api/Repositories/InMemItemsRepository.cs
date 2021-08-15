@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using catalog.Entities;
+using Catalog.Api.Entities;
 
-namespace catalog.Repositories
+namespace Catalog.Api.Repositories
 {
     public class InMemItemsRepository : IItemsRepository//Repository that implements interface from IItemsRepository file.
     {

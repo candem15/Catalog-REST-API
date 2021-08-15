@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace catalog.Dtos
+namespace Catalog.Api.Dtos
 {
     public record CreateItemDto //While client creating an item, we dont need Id and CreatedDate from client. It will setting up by server.
     {

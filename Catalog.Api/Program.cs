@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 // This file is entry point of application.
-namespace catalog
+namespace Catalog.Api
 {
     public class Program
     {

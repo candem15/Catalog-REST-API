@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using catalog.Entities;
+using Catalog.Api.Entities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace catalog.Repositories
+namespace Catalog.Api.Repositories
 {
     public class MongoDbItemsRepository : IItemsRepository //As using MongoDb we have to implement IItemsRepository interface like in InMemItemsRepository. And add mongodb dependency with terminal =>"dotnet add package MongoDB.driver".
     {

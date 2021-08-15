@@ -1,6 +1,6 @@
 using System;
 
-namespace catalog.Dtos //(D)ata (T)ransfer (O)bject using for prevent whenever we modify, remove, add "item" it can potencially break client's "contract(in this case this is item object)". 
+namespace Catalog.Api.Dtos //(D)ata (T)ransfer (O)bject using for prevent whenever we modify, remove, add "item" it can potencially break client's "contract(in this case this is item object)". 
 {
     public record ItemDto
     {

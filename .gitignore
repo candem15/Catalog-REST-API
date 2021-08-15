@@ -1,5 +1,5 @@
-obj/*
-bin/*
+Catalog.Api/obj/*
+Catalog.Api/bin/*
 *.dep 
 *.aps 
 *.vbw 

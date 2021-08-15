@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using catalog.Dtos;
-using catalog.Entities;
-using catalog.Repositories;
+using Catalog.Api.Dtos;
+using Catalog.Api.Entities;
+using Catalog.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace catalog.Controllers
+namespace Catalog.Api.Controllers
 {
     [ApiController]//This brings bunch of additional behavior for controller class that makes lifes easier.
     [Route("items")]

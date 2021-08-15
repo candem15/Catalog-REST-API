@@ -1,7 +1,7 @@
-using catalog.Dtos;
-using catalog.Entities;
+using Catalog.Api.Dtos;
+using Catalog.Api.Entities;
 
-namespace catalog
+namespace Catalog.Api
 {
     public static class Extensions // "Extensions" class must be static for can be used anywhere.
     {

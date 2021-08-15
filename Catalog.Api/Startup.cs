@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using catalog.Repositories;
+using Catalog.Api.Repositories;
 using MongoDB.Driver;
-using catalog.Settings;
+using Catalog.Api.Settings;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
@@ -22,7 +22,7 @@ using System.Text.Json;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Http;
 
-namespace catalog
+namespace Catalog.Api
 {
     public class Startup
     {

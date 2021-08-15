@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using catalog.Entities;
+using Catalog.Api.Entities;
 
-namespace catalog.Repositories//Using namespace from folder's name
+namespace Catalog.Api.Repositories//Using namespace from folder's name
 {
     public interface IItemsRepository//This Interface extracted from InMemItemsRepository then copy pasted to this file.
     {

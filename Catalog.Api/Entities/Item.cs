@@ -1,6 +1,6 @@
 using System;
 
-namespace catalog.Entities
+namespace Catalog.Api.Entities
 {
 // Record type used instead of Class type because of *immutable objects,*With-expressions support,*Value-based equality support
     public record Item
