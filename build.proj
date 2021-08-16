@@ -1,0 +1,6 @@
+<!--This file will allow us to build both "Catalog.Api" and "Catalog.UnitTests" in one shot.-->
+<Project Sdk="Microsoft.Build.Traversal/3.0.3"> 
+    <ItemGroup> <!--Inside this section we can reference all project file that we want to compile. In this case we want to compile all files ending with "proj". -->
+        <ProjectReference Include="**\*.*proj"/> 
+    </ItemGroup>
+</Project>

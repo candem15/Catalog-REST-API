@@ -7,11 +7,16 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Catalog.Api/Catalog.Api.csproj",
+                "${workspaceFolder}/build.proj", //We referenced to file that we recently created for build all of our project in one shot.
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            //This "group" section will help to build our project easily.
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
             "label": "publish",
@@ -23,12 +28,7 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile",
-            //This "group" section will help to build our project easily.
-            "group": {
-                "kind": "build"
-                "isDefault": true
-            }
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "watch",

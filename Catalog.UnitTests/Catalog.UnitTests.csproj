@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<!--We created this "xunit project" with "dotnet new xunit -n Catalog.UnitTests" command.-->
+<!--Then added reference in Catalog.Unittest from our REST API => "dotnet add reference ..\Catalog.Api\Catalog.Api.csproj"-->  
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="moq" Version="4.16.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Catalog.Api\Catalog.Api.csproj" />
+  </ItemGroup>
+</Project>
+<!--We also need couple of additional nougat packjages in this test project -->
+<!--"dotnet add package Microsoft.Extensions.Logging.Abstractions" this package will used for test ItemController class does receive a logger in constructor. -->
+<!--"dotnet add package moq" This can help mock our classes in controller. So we can a test only the pieces that we care about in controller but we dont have to worry about how to create or how dependent or extenal dependencies.-->

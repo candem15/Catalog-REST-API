@@ -6,6 +6,7 @@ using Catalog.Api.Dtos;
 using Catalog.Api.Entities;
 using Catalog.Api.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Catalog.Api.Controllers
 {
@@ -14,9 +15,11 @@ namespace Catalog.Api.Controllers
     public class ItemsController:ControllerBase //ControllerBase must be inherited for making from class to controller.
     {
         private readonly IItemsRepository repository; //In controller we need add "instance" of repository that we created for any action or operation.
-        public ItemsController(IItemsRepository repository)//Constructor of this controller. While we are using interface in controller constructor this provides "Dependency Injection".
+        private readonly ILogger<ItemsController> logger;
+        public ItemsController(IItemsRepository repository, ILogger<ItemsController> logger)//Constructor of this controller. While we are using interface in controller constructor this provides "Dependency Injection".
         {
-            this.repository=repository;//This is work like "repository writer". Thanks to "IItemsRepository" now controller dont know which repository work with it.
+            this.repository = repository;//This is work like "repository writer". Thanks to "IItemsRepository" now controller dont know which repository work with it.
+            this.logger = logger;
         }
         
         [HttpGet]// GET /items 
