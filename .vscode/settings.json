@@ -1,3 +1,5 @@
 {
-    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj"
+    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj",
+    "typescript.referencesCodeLens.enabled": true,
+    "javascript.referencesCodeLens.enabled": true
 }
