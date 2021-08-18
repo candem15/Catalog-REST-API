@@ -108,5 +108,15 @@ After that modify ItemsControllerTests based to "Entities/Item.cs".
 Add GetItemsAsync_WithMatchingItems_ReturnsMatchingItems to
 ItemsControllerTests. Build final version of REST API's image to
  push DockerHub.
+## Testing via Docker
+Run Docker Desktop then enter following two commands on terminal. After that Catalog-REST-API will be ready to use => ```http://localhost:8080/```
+
+```
+docker run -d --rm --name mongoNet5 -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=erayadmin -e MONGO_INITDB_ROOT_PASSWORD=eray#Admin1 --network=erayNet5 mongo
+```
+```
+docker run -it --rm --name rest_net5 -p 8080:80 -e MongoDbSettings:Host=mongo -e MongoDbSettings:Password=eray#Admin1 --network=erayNet5 candem16/catalog:v3
+```
 ## Folder Structure (VScode)
-![alt text](https://imgur.com/pWIQ8iN)
+![folder structure](https://i.imgur.com/pWIQ8iN.png)
+
