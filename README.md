@@ -108,3 +108,5 @@ After that modify ItemsControllerTests based to "Entities/Item.cs".
 Add GetItemsAsync_WithMatchingItems_ReturnsMatchingItems to
 ItemsControllerTests. Build final version of REST API's image to
  push DockerHub.
+## Folder Structure (VScode)
+![alt text](https://imgur.com/pWIQ8iN)
