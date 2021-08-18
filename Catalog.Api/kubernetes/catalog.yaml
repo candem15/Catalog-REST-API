@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: catalog
-        image: candem16/catalog:v1 #This is name of image that we created at docker in last commit. Now we are saying we are pulling down this image into kubernetes
+        image: candem16/catalog:v3 #This is name of image that we created at docker in last commit. Now we are saying we are pulling down this image into kubernetes
         resources: #Hardware specs settings that for our REST api can be needed. In this case default values should be enough.
           limits:
             memory: "128Mi"

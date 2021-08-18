@@ -9,6 +9,7 @@ using Catalog.Api.Dtos;
 using Moq;
 using Xunit;
 using FluentAssertions;
+using System.Collections.Generic;
 //If you are getting red underlines after rename this file to "ItemsControllerTests" press f1 and restart OmniSharp.
 namespace Catalog.UnitTests
 {
@@ -59,9 +60,7 @@ namespace Catalog.UnitTests
 
             //Assert
 
-            result.Value.Should().BeEquivalentTo( //This methods comes from "Fluent Assetions". 
-                expectedItem,
-                options => options.ComparingByMembers<Item>()); //In Catalog.Api our "Item" entity is actually record type. Record types override "Equal" method of the object so that means this method doesn't behave very well. Because method believes have to compare DTO to entity direcyly not properties as we care about. So we added option to adress this for comparing by members of item of the item.
+            result.Value.Should().BeEquivalentTo(expectedItem); //This methods comes from "Fluent Assetions".
 
         }
 
@@ -83,9 +82,37 @@ namespace Catalog.UnitTests
 
             //Assert
 
-            result.Should().BeEquivalentTo( 
-                expectedItems,
-                options => options.ComparingByMembers<Item>()); 
+            result.Should().BeEquivalentTo(expectedItems); 
+
+        }
+
+        [Fact]
+        public async Task GetItemsAsync_WithMatchingItems_ReturnsMatchingItems() //Getting all items that contains given name.
+        {
+            //Arrange
+            
+            var allItems = new[]
+            {
+            new Item() { Name= "Great Axe"},
+            new Item() { Name= "Blade Axe"},
+            new Item() { Name= "Two-Handed Sword"}
+            };
+
+            var nameToMatch = "Axe";
+            repositoryStub.Setup(repo => repo.GetItemsAsync()) 
+                .ReturnsAsync(allItems);
+
+            var controller = new ItemsController(repositoryStub.Object, loggerStub.Object);
+
+            //Act
+
+            IEnumerable<ItemDto> foundItems = await controller.GetItemsAsync(nameToMatch);
+
+            //Assert
+
+            foundItems.Should().OnlyContain(
+                item => item.Name == allItems[0].Name || item.Name == allItems[1].Name
+                );
 
         }
 
@@ -94,11 +121,10 @@ namespace Catalog.UnitTests
         {
             //Arrange
             
-            var itemToCreate = new CreateItemDto() //While creating item as you remember we need to give only "name" and "price".
-            {
-                Name = Guid.NewGuid().ToString(),
-                Price = rand.Next(1000)
-            };
+            var itemToCreate = new CreateItemDto( //While creating item as you remember we need to give "name", "price" and "description".
+                Guid.NewGuid().ToString(),
+                rand.Next(1000),
+                Guid.NewGuid().ToString()); 
 
             var controller = new ItemsController(repositoryStub.Object, loggerStub.Object);
 
@@ -127,12 +153,11 @@ namespace Catalog.UnitTests
                 .ReturnsAsync(existingItem);
             
             var itemId = existingItem.Id; // We took existingItem's id for update.
-            var itemToUpdate = new UpdateItemDto() //Here we give new values to properties for simulate updating item.
-            {
-                Name = Guid.NewGuid().ToString(),
-                Price = existingItem.Price + 5
-            };
-
+            var itemToUpdate = new UpdateItemDto( //Here we give new values to properties for simulate updating item.
+                Guid.NewGuid().ToString(),
+                rand.Next(1000),
+                Guid.NewGuid().ToString()); 
+           
             var controller = new ItemsController(repositoryStub.Object, loggerStub.Object);
 
             //Act
@@ -175,6 +200,7 @@ namespace Catalog.UnitTests
                 Id = Guid.NewGuid(),
                 Name = Guid.NewGuid().ToString(),
                 Price = rand.Next(1000),
+                Description = Guid.NewGuid().ToString(),
                 CreatedDate = DateTimeOffset.UtcNow
             };
         }   

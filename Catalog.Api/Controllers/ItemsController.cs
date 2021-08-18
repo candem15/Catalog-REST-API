@@ -23,9 +23,16 @@ namespace Catalog.Api.Controllers
         }
         
         [HttpGet]// GET /items 
-        public async Task<IEnumerable<ItemDto>> GetItemsAsync() //This will return all items in list "items".
+        public async Task<IEnumerable<ItemDto>> GetItemsAsync(string name = null) //This will return all items in list "items".
         {
             var items= (await repository.GetItemsAsync()).Select(item=>item.AsDto());//Invokes GetItems method from Repositories folder for get all items and equalize it to variable then return. Setting up "Contract" as ItemDto here, because we started using Dtos. "Await" is seperated from actual method and we cant use "Select" but for avoid this wrap await and async method then use "Select".
+            
+            if(!string.IsNullOrWhiteSpace(name))
+            {
+                return items.Where(items=>items.Name.Contains(name, StringComparison.OrdinalIgnoreCase)); //With that we can search all items name and returns only that contains given name. Also searchs with without case sensivity. 
+            }
+            
+            
             return items;
         }
 
@@ -49,6 +56,7 @@ namespace Catalog.Api.Controllers
                 Id=Guid.NewGuid(),
                 Name=itemDto.Name,
                 Price=itemDto.Price,
+                Description=itemDto.Description,
                 CreatedDate=DateTimeOffset.UtcNow
             };
 
@@ -66,15 +74,12 @@ namespace Catalog.Api.Controllers
                 return NotFound();
             }
 
-            Item updatedItem=existingItem with //"With-expressions" is comes with record(like class) type and this helps us get copy of existing item and update it.
-            {
-                Name=itemDto.Name,
-                Price=itemDto.Price
-            };
+            existingItem.Name = itemDto.Name; //As we remember "With-expressions" comes with "Record" type. But we changed that to "Class". So we cannot use that now.
+            existingItem.Price = itemDto.Price;
+            
+            await repository.UpdateItemAsync(existingItem);
 
-            await repository.UpdateItemAsync(updatedItem);
-
-            return NoContent(); //The convention is return no content in "UpdateItem".
+            return NoContent(); //The convention is return no content in "UpdateItemAsync".
         }
 
         [HttpDelete("{id}")] // DELETE /items/{id}

@@ -10,8 +10,9 @@ namespace Catalog.Api.Settings
         { 
             get
             {
-                string v = $"mongodb://{User}:{Password}@{Host}:{Port}"; //This is syntax type that MongoDb expecting from us.
-                return v;
+                string URI = $"mongodb://{User}:{Password}@{Host}:{Port}"; //This is syntax type that MongoDb expecting from us.
+                return URI; 
+                
             } 
         }
     }
