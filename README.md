@@ -5,8 +5,8 @@ C#, .NET 5 Framework, Test Driven Development(xunit), Git, Dependency Injection,
 ## Stages of project based to commits
 ### I. Getting started
 #### This is beginning of project.
-This commit create after "dotnet new webapi -n catalog",
-"dotnet dev-certs https --trust" apply then add ".gitignore" for git
+This commit create after ```dotnet new webapi -n catalog```,
+```dotnet dev-certs https --trust``` apply then add ".gitignore" for git
 ignored list.
 #### Remove WeatherForecast template from project
 Also "group" section added to tasks.json for build tasks easier.
@@ -54,17 +54,16 @@ in "Startup.cs".
 We define UpdateItem in ItemsController with HttpPut(id) attritibute.
 #### Add Repositories/MongoDbItemsRepository 
 Now we are starting to use Database for our REST api. Firsly add nuget
-package "dotnet add package MongoDb.driver" for MongoDb. Then create
+package ```dotnet add package MongoDb.driver``` for MongoDb. Then create
 new file in Repositories to use MongoDb dependency. Finally implement
 IItemsRepository in MongoDbItemsRepository and declare MongoDb Client.
 ### VII. Secret Manager and Health Checks
 #### Add .NET Secret Manager for authentication 
 For preventing security issues while connecting MongoDB. ".Net Secret
 Manager" store our passwords and not showing in .json files. First our
-"docker run" command now includes user and password option =>
-"docker run -d --rm -p 27017:27017 -v mongodbdata:/data/db
--e MONGO_INITDB_ROOT_USERNAME=erayadmin -e
-MONGO_INITDB_ROOT_PASSWORD=eray#Admin1 mongo". Then add "User",
+```docker run``` command now includes user and password option =>
+```docker run -d --rm -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=erayadmin -e MONGO_INITDB_ROOT_PASSWORD=eray#Admin1 mongo ```
+Then add "User",
 "Password" properties in MongoDbSettings and also add syntax to
 ConnectionString method that MongoDB requires. Further informations are
 in comment lines.
@@ -94,9 +93,9 @@ names with new ones.
 3- catalog.dll => Catalog.Api.dll
 4- namespace catalog => namespace Catalog.Api
 5- using catalog => using Catalog.Api
-6- At both .vscode/launch.json and .vscode/tasks.json "${workspaceFolder}/" => "${workspaceFolder}/Catalog.Api/"
+6- At both .vscode/launch.json and .vscode/tasks.json changes like "${workspaceFolder}/" => "${workspaceFolder}/Catalog.Api/"
 After all of that switch to new folder then build
-"docker build -t candem16/catalog:v2 ." because this is new version of REST API.
+```docker build -t candem16/catalog:v2 .``` because this is new version of REST API.
 #### Add more UnitTests to ItemsControllerTests 
 Added all necessary UnitTests inside ItemsControllerTests and
 "Fluent Assertion" package to Catalog.UnitTests project. Read the
@@ -119,4 +118,3 @@ docker run -it --rm --name rest_net5 -p 8080:80 -e MongoDbSettings:Host=mongo -e
 ```
 ## Folder Structure (VScode)
 ![folder structure](https://i.imgur.com/pWIQ8iN.png)
-
